@@ -77,20 +77,14 @@ class _AdminLoginState extends State<AdminLogin> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () async {
-                    // Implement your login logic here
                     String email = _emailController.text;
                     String password = _passwordController.text;
-                    // You can perform validation, authentication, etc.
+
                     final mentorNotifier =
                         Provider.of<OnBoardNotifier>(context, listen: false);
-
                     Superadmin admin =
                         Superadmin(email: email, password: password);
-
                     await mentorNotifier.createadmin(admin);
-
-
-                
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,

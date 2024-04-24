@@ -1,5 +1,6 @@
 
 
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1/HomeScreen/HomePage.dart';
 import 'package:flutter_application_1/model/login.dart';
@@ -21,11 +22,10 @@ class OnBoardNotifier extends ChangeNotifier {
           prefs.setBool("logged", true);
         });
         Get.back();
-        print(response);
-        Get.snackbar("done", "Your are done");
         Get.to(()=>HomeScreen());
+        Get.snackbar("Login Successfull", "Welcome Admin");
       } else if (!response) {
-        Get.snackbar("error", "error");
+        Get.snackbar("Invaild email or password", "Admin not found",backgroundColor: Colors.white,colorText: Colors.red);
       }
     }).catchError((error) {
       print(model.toJson());
