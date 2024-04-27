@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constant.dart';
+import 'package:flutter_application_1/funcitons.dart';
 import '../model/statioMOdel.dart';
 import 'package:http/http.dart' as http;
 
@@ -47,59 +48,95 @@ class _AdminRequestPageState extends State<AdminRequestPage> {
             : ListView.builder(
                 itemCount: stationRequests.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text('Name: ${stationRequests[index].name}'),
-                        Text('Location: ${stationRequests[index].address}'),
-                      ],
-                    ),
-                    subtitle: Column(
-                      children: [
-
-                        Text(
-                            'Number of Charging Points: ${stationRequests[index].plugs}'),
-
-                      ],
-                    ),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.check),
-                          onPressed: () async {
-                            var url = Uri.https(Server.url,
-                                "/createstation/station/approve/${stationRequests[index].id}");
-                            print(url);
-                            var response = await http.patch(url);
-                            if (response.statusCode == 200) {
-                              setState(() {
-                                stationRequests.removeAt(index);
-                              });
-                            } else {
-                              print('Error creating station');
-                            }
-                          },
+                  return Card(
+                    elevation: 5,
+                    margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    child: Container(
+                      decoration:
+                          const BoxDecoration(color: Color.fromRGBO(64, 75, 96, .9)),
+                      child: ListTile(
+                        contentPadding:
+                            const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        title: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Name: ${stationRequests[index].name}',
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              'Location: ${stationRequests[index].address}',
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                            Text(
+                              'Owner: ${stationRequests[index].ownerName}',
+                              style: const TextStyle(color: Colors.white),),
+                            Text(
+                              'Phone: ${stationRequests[index].ownerPhone}',
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          ],
                         ),
-                        IconButton(
-                          icon: const Icon(Icons.close),
-                          onPressed: () async {
-                            var url = Uri.https(Server.url,
-                                "/createstation/station/reject/${stationRequests[index].id}");
-                            print(url);
-                            var response = await http.patch(url);
-                            if (response.statusCode == 200) {
-
-                              setState(() {
-                                stationRequests.removeAt(index);
-                              });
-                            } else {
-
-                            }
-                          },
+                        subtitle: Padding(
+                          padding: const EdgeInsets.only(top: 10),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Number of Charging Points: ${stationRequests[index].plugs}',
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                              IconButton(onPressed: (){
+                                String long=stationRequests[index].longitude.toString();
+                                String lat=stationRequests[index].latitude.toString();
+                                String url="https://www.google.com/maps/@${lat},${long},15z";
+                                appinfo.openExternalApplication(url);
+                              }, icon: Icon(Icons.mail_outline_outlined, color: Colors.white),),
+                            ],
+                          ),
                         ),
-                      ],
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon:
+                                  const Icon(Icons.check, color: Colors.white),
+                              onPressed: () async {
+                                var url = Uri.https(Server.url,
+                                    "/createstation/station/approve/${stationRequests[index].id}");
+                                print(url);
+                                var response = await http.patch(url);
+                                if (response.statusCode == 200) {
+                                  setState(() {
+                                    stationRequests.removeAt(index);
+                                  });
+                                } else {
+                                  print('Error creating station');
+                                }
+                              },
+                            ),
+                            IconButton(
+                              icon:
+                                  const Icon(Icons.close, color: Colors.white),
+                              onPressed: () async {
+                                var url = Uri.https(Server.url,
+                                    "/createstation/station/reject/${stationRequests[index].id}");
+                                print(url);
+                                var response = await http.patch(url);
+                                if (response.statusCode == 200) {
+                                  setState(() {
+                                    stationRequests.removeAt(index);
+                                  });
+                                } else {
+                                  // Handle error
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   );
                 },
