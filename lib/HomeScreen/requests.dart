@@ -48,16 +48,28 @@ class _AdminRequestPageState extends State<AdminRequestPage> {
                 itemCount: stationRequests.length,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    title: Text('Location: ${stationRequests[index].address}'),
-                    subtitle: Text(
-                        'Number of Charging Points: ${stationRequests[index].plugs}'),
+                    title: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text('Name: ${stationRequests[index].name}'),
+                        Text('Location: ${stationRequests[index].address}'),
+                      ],
+                    ),
+                    subtitle: Column(
+                      children: [
+
+                        Text(
+                            'Number of Charging Points: ${stationRequests[index].plugs}'),
+
+                      ],
+                    ),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         IconButton(
                           icon: const Icon(Icons.check),
                           onPressed: () async {
-                            var url = Uri.http("16.171.199.244:5001",
+                            var url = Uri.https(Server.url,
                                 "/createstation/station/approve/${stationRequests[index].id}");
                             print(url);
                             var response = await http.patch(url);
